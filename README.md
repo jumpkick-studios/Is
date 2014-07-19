@@ -41,4 +41,4 @@ A better way to handle this is to write the code in such a way that when any sin
     });
 ```
 
-This allows the code to almost like spoken words, which hopefully leads to more maintainable code.
+This allows the code to read almost like spoken words, which hopefully leads to more maintainable code.
