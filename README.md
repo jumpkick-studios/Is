@@ -5,7 +5,7 @@ A better way to write JavaScript conditional statements and still have pretty co
 
 This library was inspire by the Maybe Monad pattern. It allows you to to write conditional statements without nested if statements or null checking. 
 
-**Example
+###Example
   ```
   var foo="bar;
   if(foo){
