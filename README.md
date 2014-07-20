@@ -93,10 +93,17 @@ There are several methods available for checking the input value. If a validatio
       consolde.log("bad email") //if the chain fails, you can run a callback using "catch"
     });
   
+    
+  
 ```
-
-The best part about all of this is that you don't need to check for undefined variable values. So something like this:
+The best part of all this is that you no longer need to worry about undefined variable values. For instance, if you have a value like this:
 
 ```
+var foo={bar:undefined};
 
-
+new Is(foo.bar)
+  .isLongerThan(3)
+  .catch(()=>{
+    console.log("no value") // this gets called no matter what the value of foo.bar is
+  })
+```
