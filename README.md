@@ -5,6 +5,16 @@ A better way to write JavaScript conditional statements and still have pretty co
 
 This library was inspired by the Maybe Monad pattern and libraries like Jasmine.js and JQuery. It allows you to to write conditional statements without nested if statements or null checking. 
 
+###Installation
+
+Just include the minified script in your project.
+```
+<script src="is.js"></script>
+```
+Or, if you're using TypeScript (and why aren't you using TyepScript?), include the definition file in your main class.
+```
+// <reference path="is.d.ts" />
+```
 ###Examples
   Typically, a lot of checks go into working with variables, especially when the values are returned by ajax calls or user input. This results in a lot of nested if statements that check for values to be defined, but also to pass various validation checks. For instance, see this code:
   
