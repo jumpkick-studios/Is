@@ -5,7 +5,17 @@ A better way to write JavaScript conditional statements and still have pretty co
 
 This library was inspired by the Maybe Monad pattern and libraries like Jasmine.js and JQuery. It allows you to to write conditional statements without nested if statements or null checking. 
 
-###Examples
+###Installation
+
+Just include the minified script in your project. It's really tiny (1kb minified and zipped)
+```
+<script src="is.min.js"></script>
+```
+Or, if you're using TypeScript (and why aren't you using TyepScript?), include the definition file in your main class.
+```
+/// <reference path="is.d.ts" />
+```
+###How Does It Work?
   Typically, a lot of checks go into working with variables, especially when the values are returned by ajax calls or user input. This results in a lot of nested if statements that check for values to be defined, but also to pass various validation checks. For instance, see this code:
   
   ```
@@ -74,15 +84,26 @@ There are several methods available for checking the input value. If a validatio
   new Is("john.doe@fakeemail.com")
     .is(validEmail)
     .then(()=>{
-      consolde.log("valid email") //if the chain succeeds, you can run a callback using _then_
+      consolde.log("valid email") //if the chain succeeds, you can run a callback using "then"
     });
     
   new Is("john.doefakeemail.com")
     .is(validEmail)
     .catch(()=>{
-      consolde.log("bad email") //if the chain fails, you can run a callback using _catch_
+      consolde.log("bad email") //if the chain fails, you can run a callback using "catch"
     });
   
     
   
+```
+The best part of all this is that you no longer need to worry about undefined variable values. For instance, if you have a value like this:
+
+```
+var foo={bar:undefined};
+
+new Is(foo.bar)
+  .isLongerThan(3)
+  .catch(()=>{
+    console.log("no value") // this gets called no matter what the value of foo.bar is
+  })
 ```
