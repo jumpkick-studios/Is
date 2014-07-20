@@ -70,8 +70,6 @@ There are several methods available for checking the input value. If a validatio
 
   new Is("john.doe@fakeemail.com")
     .is(validEmail) //you can use a function as an argument which returns true of false
-    
-  
   
   new Is("john.doe@fakeemail.com")
     .is(validEmail)
