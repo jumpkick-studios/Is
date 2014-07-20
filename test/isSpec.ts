@@ -106,6 +106,26 @@ describe("Is", function () {
         });
         expect(count).toBe(1)
     })
+
+    it("should trigger finally even when it fails", function(){
+        var count:number = 0;
+        new Is(undefined).then(()=>{
+            count = 1;
+        }).finally(()=>{
+            count=2
+        });
+        expect(count).toBe(2)
+    })
+
+    it("should trigger finally even when it succeeds", function(){
+        var count:number = 0;
+        new Is(1).then(()=>{
+            count = 1;
+        }).finally(()=>{
+            count=2
+        });
+        expect(count).toBe(2)
+    })
 });
 
 

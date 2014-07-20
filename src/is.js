@@ -256,8 +256,11 @@ var jumpkick;
                 func();
             }
         };
+
+        Is.prototype.finally = function (func) {
+            func();
+        };
         return Is;
     })();
     jumpkick.Is = Is;
 })(jumpkick || (jumpkick = {}));
-//# sourceMappingURL=is.js.map

@@ -4,6 +4,7 @@ declare module jumpkick {
         private inverse;
         constructor(value?: any, inverse?: boolean);
         public is(...args: any[]): any;
+        private checkForLengthOrCompareNumber(test);
         public any(...args: any[]): any;
         public or(): Is;
         public isLongerThan(val: number): Is;
@@ -15,5 +16,6 @@ declare module jumpkick {
         public isGreaterThan(val: number): Is;
         public then(func: any): Is;
         public catch(func: any): void;
+        public finally(func: any): void;
     }
 }

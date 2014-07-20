@@ -258,11 +258,14 @@ module jumpkick {
             return new Is(this.value);
         }
 
-        public catch
-            (func:any) {
+        public catch(func:any):void {
             if (!this.value) {
                 func();
             }
+        }
+
+        public finally(func:any):void{
+            func()
         }
     }
 }

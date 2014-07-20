@@ -100,5 +100,25 @@ describe("Is", function () {
         });
         expect(count).toBe(1);
     });
+
+    it("should trigger finally even when it fails", function () {
+        var count = 0;
+        new Is(undefined).then(function () {
+            count = 1;
+        }).finally(function () {
+            count = 2;
+        });
+        expect(count).toBe(2);
+    });
+
+    it("should trigger finally even when it succeeds", function () {
+        var count = 0;
+        new Is(1).then(function () {
+            count = 1;
+        }).finally(function () {
+            count = 2;
+        });
+        expect(count).toBe(2);
+    });
 });
 //# sourceMappingURL=isSpec.js.map
