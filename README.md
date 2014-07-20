@@ -42,3 +42,49 @@ A better way to handle this is to write the code in such a way that when any sin
 ```
 
 This allows the code to read almost like spoken words, which hopefully leads to more maintainable code.
+
+There are several methods available for checking the input value. If a validation method is successful, Is returns an instance of Is with the value, otherwise it returns one with nothing in it, which stops the chain.
+
+```  
+  var foo="bar";
+  new Is(foo)
+  .isLongerThan(number) // checks the length of a string for minimum length 
+  .isShorterThan(number) // checks the length of a string for maximum length
+  .equals("bar") // checks for exact value
+  .not() // inverts the next validation
+  .equals("baz")
+  
+  new Is(1000)
+  .isNumber() // returns true if the value is a number
+  .isLessThan(10000) // checks for maximum value
+  .isGreaterThan(0) // checks for minimum value
+  
+  new Is(100)
+    .any("<101",">1000") // you can use a shorthand and check for any of these things to be true
+    .is("<101", ">99") // or check that all validations are true
+    
+  var validEmail = function (val:string) {
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(val);
+  };
+
+  new Is("john.doe@fakeemail.com")
+    .is(validEmail) //you can use a function as an argument which returns true of false
+    
+  
+  
+  new Is("john.doe@fakeemail.com")
+    .is(validEmail)
+    .then(()=>{
+      consolde.log("valid email") //if the chain succeeds, you can run a callback using _then_
+    });
+    
+  new Is("john.doefakeemail.com")
+    .is(validEmail)
+    .catch(()=>{
+      consolde.log("bad email") //if the chain fails, you can run a callback using _catch_
+    });
+  
+    
+  
+```
