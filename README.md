@@ -13,7 +13,7 @@ Just include the minified script in your project. It's really tiny (1kb minified
 ```
 Or, if you're using TypeScript (and why aren't you using TyepScript?), include the definition file in your main class.
 ```
-// <reference path="is.d.ts" />
+/// <reference path="is.d.ts" />
 ```
 ###How Does It Work?
   Typically, a lot of checks go into working with variables, especially when the values are returned by ajax calls or user input. This results in a lot of nested if statements that check for values to be defined, but also to pass various validation checks. For instance, see this code:
