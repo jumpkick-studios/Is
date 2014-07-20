@@ -84,13 +84,13 @@ There are several methods available for checking the input value. If a validatio
   new Is("john.doe@fakeemail.com")
     .is(validEmail)
     .then(()=>{
-      consolde.log("valid email") //if the chain succeeds, you can run a callback using _then_
+      consolde.log("valid email") //if the chain succeeds, you can run a callback using "then"
     });
     
   new Is("john.doefakeemail.com")
     .is(validEmail)
     .catch(()=>{
-      consolde.log("bad email") //if the chain fails, you can run a callback using _catch_
+      consolde.log("bad email") //if the chain fails, you can run a callback using "catch"
     });
   
     
