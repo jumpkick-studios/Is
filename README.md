@@ -7,9 +7,9 @@ This library was inspired by the Maybe Monad pattern and libraries like Jasmine.
 
 ###Installation
 
-Just include the minified script in your project.
+Just include the minified script in your project. It's really tiny (1kb minified and zipped)
 ```
-<script src="is.js"></script>
+<script src="is.min.js"></script>
 ```
 Or, if you're using TypeScript (and why aren't you using TyepScript?), include the definition file in your main class.
 ```
