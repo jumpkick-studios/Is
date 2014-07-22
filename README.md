@@ -93,7 +93,13 @@ There are several methods available for checking the input value. If a validatio
       consolde.log("bad email") //if the chain fails, you can run a callback using "catch"
     });
   
-    
+  new Is("john.doefakeemail.com")
+    .is(validEmail)
+    .catch(()=>{
+      //bad email
+    }).finally(()=>{
+      //using this method, you can run a callback using "finally" no matter what happens
+    });
   
 ```
 The best part of all this is that you no longer need to worry about undefined variable values. For instance, if you have a value like this:
