@@ -25,6 +25,10 @@
 
  */
 
+var Is=function(value?:any):jumpkick.Is{
+    return new jumpkick.Is(value);
+};
+
 module jumpkick {
     export class Is {
         private inverse:boolean = false;
@@ -128,10 +132,6 @@ module jumpkick {
             } else {
                 return new Is();
             }
-        }
-
-        public or():Is {
-            return this;
         }
 
         public isLongerThan(val:number) {
@@ -258,14 +258,16 @@ module jumpkick {
             return new Is(this.value);
         }
 
-        public catch(func:any):void {
+        public catch(func:any):Is {
             if (!this.value) {
                 func();
             }
+            return new Is(this.value);
         }
 
-        public finally(func:any):void{
-            func()
+        public finally(func:any):Is{
+            func();
+            return new Is(this.value);
         }
     }
 }

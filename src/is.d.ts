@@ -1,3 +1,4 @@
+declare var Is: (value?: any) => jumpkick.Is;
 declare module jumpkick {
     class Is {
         public value: any;
@@ -6,7 +7,6 @@ declare module jumpkick {
         public is(...args: any[]): any;
         private checkForLengthOrCompareNumber(test);
         public any(...args: any[]): any;
-        public or(): Is;
         public isLongerThan(val: number): Is;
         public isShorterThan(val: number): Is;
         public not(): Is;
@@ -15,7 +15,7 @@ declare module jumpkick {
         public isNumber(): Is;
         public isGreaterThan(val: number): Is;
         public then(func: any): Is;
-        public catch(func: any): void;
-        public finally(func: any): void;
+        public catch(func: any): Is;
+        public finally(func: any): Is;
     }
 }

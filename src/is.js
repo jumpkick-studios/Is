@@ -18,6 +18,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+var Is = function (value) {
+    return new jumpkick.Is(value);
+};
+
 var jumpkick;
 (function (jumpkick) {
     var Is = (function () {
@@ -123,10 +127,6 @@ var jumpkick;
             } else {
                 return new Is();
             }
-        };
-
-        Is.prototype.or = function () {
-            return this;
         };
 
         Is.prototype.isLongerThan = function (val) {
@@ -255,12 +255,15 @@ var jumpkick;
             if (!this.value) {
                 func();
             }
+            return new Is(this.value);
         };
 
         Is.prototype.finally = function (func) {
             func();
+            return new Is(this.value);
         };
         return Is;
     })();
     jumpkick.Is = Is;
 })(jumpkick || (jumpkick = {}));
+//# sourceMappingURL=is.js.map
