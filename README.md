@@ -35,7 +35,7 @@ Or, if you're using TypeScript (and why aren't you using TyepScript?), include t
   }
   ```
 
-A better way to handle this is to write the code in such a way that when any single step fails, the chain is broken and none of the other steps are executed. A single _catch_ function can handle the failure. So using Is, the preceding code can be rewritten as:
+A better way to handle this is to write the code in such a way that when any single step fails, the chain is broken and none of the other steps are executed. A single `catch` function can handle the failure. So using Is, the preceding code can be rewritten as:
   ```
 
   var foo="bar";
@@ -112,4 +112,20 @@ new Is(foo.bar)
   .catch(()=>{
     console.log("no value") // this gets called no matter what the value of foo.bar is
   })
+```
+
+You can also instantiate the chain by either using the `new` command or by using the `Facade`
+
+```
+Is("foo")
+ .isLongerThan(2)
+ .then(()=>{
+   // callback
+ });
+ 
+ new jumpkick.Is("foo")
+ .isLongerThan(2)
+ .then(()=>{
+   // callback
+ });
 ```
