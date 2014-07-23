@@ -35,11 +35,11 @@ Or, if you're using TypeScript (and why aren't you using TyepScript?), include t
   }
   ```
 
-A better way to handle this is to write the code in such a way that when any single step fails, the chain is broken and none of the other steps are executed. A single _catch_ function can handle the failure. So using Is, the preceding code can be rewritten as:
+A better way to handle this is to write the code in such a way that when any single step fails, the chain is broken and none of the other steps are executed. A single `catch` function can handle the failure. So using Is, the preceding code can be rewritten as:
   ```
 
   var foo="bar";
-  new Is(foo)
+  Is(foo)
     .isLongerThan(0).
     .equals("bar")
     .not().equals("bar2")
@@ -57,19 +57,19 @@ There are several methods available for checking the input value. If a validatio
 
 ```  
   var foo="bar";
-  new Is(foo)
+  Is(foo)
   .isLongerThan(number) // checks the length of a string for minimum length 
   .isShorterThan(number) // checks the length of a string for maximum length
   .equals("bar") // checks for exact value
   .not() // inverts the next validation
   .equals("baz")
   
-  new Is(1000)
+  Is(1000)
   .isNumber() // returns true if the value is a number
   .isLessThan(10000) // checks for maximum value
   .isGreaterThan(0) // checks for minimum value
   
-  new Is(100)
+  Is(100)
     .any("<101",">1000") // you can use a shorthand and check for any of these things to be true
     .is("<101", ">99") // or check that all validations are true
     
@@ -78,22 +78,22 @@ There are several methods available for checking the input value. If a validatio
     return re.test(val);
   };
 
-  new Is("john.doe@fakeemail.com")
+  Is("john.doe@fakeemail.com")
     .is(validEmail) //you can use a function as an argument which returns true of false
   
-  new Is("john.doe@fakeemail.com")
+  Is("john.doe@fakeemail.com")
     .is(validEmail)
     .then(()=>{
       consolde.log("valid email") //if the chain succeeds, you can run a callback using "then"
     });
     
-  new Is("john.doefakeemail.com")
+  Is("john.doefakeemail.com")
     .is(validEmail)
     .catch(()=>{
       consolde.log("bad email") //if the chain fails, you can run a callback using "catch"
     });
   
-  new Is("john.doefakeemail.com")
+  Is("john.doefakeemail.com")
     .is(validEmail)
     .catch(()=>{
       //bad email
@@ -107,9 +107,25 @@ The best part of all this is that you no longer need to worry about undefined va
 ```
 var foo={bar:undefined};
 
-new Is(foo.bar)
+ Is(foo.bar)
   .isLongerThan(3)
   .catch(()=>{
     console.log("no value") // this gets called no matter what the value of foo.bar is
   })
+```
+
+You can also instantiate the chain by either using the `new` command or by using the `Facade`
+
+```
+Is("foo")
+ .isLongerThan(2)
+ .then(()=>{
+   // callback
+ });
+ 
+ new jumpkick.Is("foo")
+ .isLongerThan(2)
+ .then(()=>{
+   // callback
+ });
 ```
