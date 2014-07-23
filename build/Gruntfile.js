@@ -26,7 +26,15 @@ module.exports = function (grunt) {
                 }
             }
         },
-
+        wrap: {
+          basic: {
+            src: ['../dist/is.min.js'],
+            dest: project.dirs.dist + '/is_node.min.js',
+            options: {
+              wrapper: ['// Wrapped for node compatibility\n', 'module.exports = Is;\n']
+            }
+          }
+        },
 
         mkdir           : {
             dist: {
@@ -46,7 +54,7 @@ module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
 
     grunt.registerTask('build', 'run build', function () {
-        var tasks = ['clean:dist', 'mkdir:dist', 'uglify'];
+        var tasks = ['clean:dist', 'mkdir:dist', 'uglify', 'wrap'];
         grunt.option('force', true);
         grunt.task.run(tasks);
     });
