@@ -91,44 +91,140 @@ describe("Is", function () {
         expect(count).toBe(1);
     });
 
-    it("should trigger then if any shorthand length checks are true", function(){
+    it("should trigger then if any shorthand length checks are true", function () {
         var count:number = 0;
-        Is("foo") .any("length<4)","length>10").then(()=>{
+        Is("foo").any("length<4)", "length>10").then(()=> {
             count = 1;
         });
         expect(count).toBe(1)
     })
 
-    it("should trigger then if any shorthand length checks are true", function(){
+    it("should trigger then if any shorthand length checks are true", function () {
         var count:number = 0;
-        Is(1) .any("<4)",">10").then(()=>{
+        Is(1).any("<4)", ">10").then(()=> {
             count = 1;
         });
         expect(count).toBe(1)
     })
 
-    it("should trigger finally even when it fails", function(){
+    it("should trigger finally even when it fails", function () {
         var count:number = 0;
-        Is(undefined).then(()=>{
-            count  ++;
-        }).catch(()=>{
-            count  ++;
-        }).finally(()=>{
+        Is(undefined).then(()=> {
+            count++;
+        }).catch(()=> {
+            count++;
+        }).finally(()=> {
             count++;
         });
         expect(count).toBe(2)
     })
 
-    it("should trigger finally even when it succeeds", function(){
+    it("should trigger finally even when it succeeds", function () {
         var count:number = 0;
-        Is(1).then(()=>{
-            count  ++;
-        }).finally(()=>{
+        Is(1).then(()=> {
+            count++;
+        }).finally(()=> {
             count++;
         });
         expect(count).toBe(2)
     });
 
+
+    it("should return true if an array has a value", function () {
+        var count:number;
+        Is([1, 2, 3])
+            .hasValueOf(2)
+            .then(()=> {
+                count = 1;
+            }).catch(()=> {
+                count = 0;
+            });
+        expect(count).toBe(1);
+    });
+
+    it("should return true if an array does not have a value", function () {
+        var count:number;
+        Is([1, 2, 3])
+            .hasValueOf("foo")
+            .then(()=> {
+                count = 1;
+            }).catch(()=> {
+                count = 0;
+            });
+        expect(count).toBe(0);
+    });
+
+    it("should return true if an array does not have a value and inverse is true", function () {
+        var count:number;
+        Is([1, 2, 3])
+            .not().hasValueOf("foo")
+            .then(()=> {
+                count = 1;
+            }).catch(()=> {
+                count = 0;
+            });
+        expect(count).toBe(1);
+    });
+
+    it("should return false if an array does  have a value and inverse is true", function () {
+        var count:number;
+        Is([1, 2, 3])
+            .not().hasValueOf(2)
+            .then(()=> {
+                count = 1;
+            }).catch(()=> {
+                count = 0;
+            });
+        expect(count).toBe(0);
+    });
+
+    it("should return true if an array is empty", function () {
+        var count:number;
+        Is([])
+            .isEmptyArray()
+            .then(()=> {
+                count = 1;
+            }).catch(()=> {
+                count = 0;
+            });
+        expect(count).toBe(1);
+    });
+
+    it("should return false if an array is empty and inverse is true", function () {
+        var count:number;
+        Is([])
+            .not().isEmptyArray()
+            .then(()=> {
+                count = 1;
+            }).catch(()=> {
+                count = 0;
+            });
+        expect(count).toBe(0);
+    });
+
+    it("should return false if an array is not empty", function () {
+        var count:number;
+        Is([1,2,3])
+            .isEmptyArray()
+            .then(()=> {
+                count = 1;
+            }).catch(()=> {
+                count = 0;
+            });
+        expect(count).toBe(0);
+    });
+
+    it("should return true if an array is not empty and inverse is true", function () {
+        var count:number;
+        Is([1,2,3])
+            .not().isEmptyArray()
+            .then(()=> {
+                count = 1;
+            }).catch(()=> {
+                count = 0;
+            });
+        expect(count).toBe(1);
+    });
 });
 
 

@@ -242,6 +242,34 @@ var jumpkick;
             }
         };
 
+        Is.prototype.hasValueOf = function (val) {
+            if (!this.value) {
+                return new Is();
+            }
+            if (!Array.isArray(this.value)) {
+                return new Is();
+            }
+            if (this.inverse) {
+                return this.value.indexOf(val) == -1 ? new Is(this.value) : new Is();
+            } else {
+                return this.value.indexOf(val) == -1 ? new Is() : new Is(this.value);
+            }
+        };
+
+        Is.prototype.isEmptyArray = function () {
+            if (!this.value) {
+                return new Is();
+            }
+            if (!Array.isArray(this.value)) {
+                return new Is();
+            }
+            if (this.inverse) {
+                return this.value.length > 0 ? new Is(this.value) : new Is();
+            } else {
+                return this.value.length > 0 ? new Is() : new Is(this.value);
+            }
+        };
+
         Is.prototype.then = function (func) {
             if (!this.value) {
                 return new Is();

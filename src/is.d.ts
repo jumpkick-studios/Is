@@ -14,6 +14,8 @@ declare module jumpkick {
         public isLessThan(val: number): Is;
         public isNumber(): Is;
         public isGreaterThan(val: number): Is;
+        public hasValueOf(val: any): Is;
+        public isEmptyArray(): Is;
         public then(func: any): Is;
         public catch(func: any): Is;
         public finally(func: any): Is;

@@ -77,6 +77,14 @@ There are several methods available for checking the input value. If a validatio
     .any("<101",">1000") // you can use a shorthand and check for any of these things to be true
     .is("<101", ">99") // or check that all validations are true
     
+  Is("foo")
+      .is("length>1") // check for string length
+      
+  Is([1,2,3])
+    .not().isEmptyArray() //check if array is empty
+    .hasValue0f(2) //check if array has a specific value in it
+    
+    
   var validEmail = function (val:string) {
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(val);

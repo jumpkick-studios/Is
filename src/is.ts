@@ -25,7 +25,7 @@
 
  */
 
-var Is=function(value?:any):jumpkick.Is{
+var Is = function (value?:any):jumpkick.Is {
     return new jumpkick.Is(value);
 };
 
@@ -248,6 +248,34 @@ module jumpkick {
             }
         }
 
+        public hasValueOf(val:any) {
+            if (!this.value) {
+                return new Is();
+            }
+            if (!Array.isArray(this.value)) {
+                return new Is();
+            }
+            if (this.inverse) {
+                return this.value.indexOf(val)==-1?new Is(this.value):new Is();
+            } else {
+                return this.value.indexOf(val)==-1?new Is():new Is(this.value);
+            }
+        }
+
+
+        public isEmptyArray() {
+            if (!this.value) {
+                return new Is();
+            }
+            if (!Array.isArray(this.value)) {
+                return new Is();
+            }
+            if (this.inverse) {
+                return this.value.length>0?new Is(this.value):new Is();
+            } else {
+                return this.value.length>0?new Is():new Is(this.value);
+            }
+        }
 
         public then(func:any) {
             if (!this.value) {
@@ -265,7 +293,7 @@ module jumpkick {
             return new Is(this.value);
         }
 
-        public finally(func:any):Is{
+        public finally(func:any):Is {
             func();
             return new Is(this.value);
         }

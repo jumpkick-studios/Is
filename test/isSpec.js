@@ -120,5 +120,85 @@ describe("Is", function () {
         });
         expect(count).toBe(2);
     });
+
+    it("should return true if an array has a value", function () {
+        var count;
+        Is([1, 2, 3]).hasValueOf(2).then(function () {
+            count = 1;
+        }).catch(function () {
+            count = 0;
+        });
+        expect(count).toBe(1);
+    });
+
+    it("should return true if an array does not have a value", function () {
+        var count;
+        Is([1, 2, 3]).hasValueOf("foo").then(function () {
+            count = 1;
+        }).catch(function () {
+            count = 0;
+        });
+        expect(count).toBe(0);
+    });
+
+    it("should return true if an array does not have a value and inverse is true", function () {
+        var count;
+        Is([1, 2, 3]).not().hasValueOf("foo").then(function () {
+            count = 1;
+        }).catch(function () {
+            count = 0;
+        });
+        expect(count).toBe(1);
+    });
+
+    it("should return false if an array does  have a value and inverse is true", function () {
+        var count;
+        Is([1, 2, 3]).not().hasValueOf(2).then(function () {
+            count = 1;
+        }).catch(function () {
+            count = 0;
+        });
+        expect(count).toBe(0);
+    });
+
+    it("should return true if an array is empty", function () {
+        var count;
+        Is([]).isEmptyArray().then(function () {
+            count = 1;
+        }).catch(function () {
+            count = 0;
+        });
+        expect(count).toBe(1);
+    });
+
+    it("should return false if an array is empty and inverse is true", function () {
+        var count;
+        Is([]).not().isEmptyArray().then(function () {
+            count = 1;
+        }).catch(function () {
+            count = 0;
+        });
+        expect(count).toBe(0);
+    });
+
+    it("should return false if an array is not empty", function () {
+        var count;
+        Is([1, 2, 3]).isEmptyArray().then(function () {
+            count = 1;
+        }).catch(function () {
+            count = 0;
+        });
+        expect(count).toBe(0);
+    });
+
+    it("should return true if an array is not empty and inverse is true", function () {
+        var count;
+        Is([1, 2, 3]).not().isEmptyArray().then(function () {
+            count = 1;
+        }).catch(function () {
+            count = 0;
+        });
+        expect(count).toBe(1);
+    });
 });
 //# sourceMappingURL=isSpec.js.map
