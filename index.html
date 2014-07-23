@@ -34,6 +34,8 @@
         <h1>
 <a name="is" class="anchor" href="#is"><span class="octicon octicon-link"></span></a>Is</h1>
 
+<p>A better way to write JavaScript conditional statements and still have pretty code.</p>
+
 <p>This library was inspired by the Maybe Monad pattern and libraries like Jasmine.js and JQuery. It allows you to to write conditional statements without nested if statements or null checking. </p>
 
 <h3>
@@ -47,6 +49,11 @@
 <p>Or, if you're using TypeScript (and why aren't you using TyepScript?), include the definition file in your main class.</p>
 
 <pre><code>/// &lt;reference path="is.d.ts" /&gt;
+</code></pre>
+
+<p>For use with Node.js.</p>
+
+<pre><code>var Is = require('Is');
 </code></pre>
 
 <h3>
@@ -70,11 +77,11 @@
   }
 </code></pre>
 
-<p>A better way to handle this is to write the code in such a way that when any single step fails, the chain is broken and none of the other steps are executed. A single <em>catch</em> function can handle the failure. So using Is, the preceding code can be rewritten as:</p>
+<p>A better way to handle this is to write the code in such a way that when any single step fails, the chain is broken and none of the other steps are executed. A single <code>catch</code> function can handle the failure. So using Is, the preceding code can be rewritten as:</p>
 
 <pre><code>
   var foo="bar";
-  new Is(foo)
+  Is(foo)
     .isLongerThan(0).
     .equals("bar")
     .not().equals("bar2")
@@ -91,43 +98,51 @@
 <p>There are several methods available for checking the input value. If a validation method is successful, Is returns an instance of Is with the value, otherwise it returns one with nothing in it, which stops the chain.</p>
 
 <pre><code>  var foo="bar";
-  new Is(foo)
+  Is(foo)
   .isLongerThan(number) // checks the length of a string for minimum length 
   .isShorterThan(number) // checks the length of a string for maximum length
   .equals("bar") // checks for exact value
   .not() // inverts the next validation
   .equals("baz")
 
-  new Is(1000)
+  Is(1000)
   .isNumber() // returns true if the value is a number
   .isLessThan(10000) // checks for maximum value
   .isGreaterThan(0) // checks for minimum value
 
-  new Is(100)
+  Is(100)
     .any("&lt;101","&gt;1000") // you can use a shorthand and check for any of these things to be true
     .is("&lt;101", "&gt;99") // or check that all validations are true
+
+  Is("foo")
+      .is("length&gt;1") // check for string length
+
+  Is([1,2,3])
+    .not().isEmptyArray() //check if array is empty
+    .hasValue0f(2) //check if array has a specific value in it
+
 
   var validEmail = function (val:string) {
     var re = /^(([^&lt;&gt;()[\]\\.,;:\s@\"]+(\.[^&lt;&gt;()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(val);
   };
 
-  new Is("john.doe@fakeemail.com")
+  Is("john.doe@fakeemail.com")
     .is(validEmail) //you can use a function as an argument which returns true of false
 
-  new Is("john.doe@fakeemail.com")
+  Is("john.doe@fakeemail.com")
     .is(validEmail)
     .then(()=&gt;{
       consolde.log("valid email") //if the chain succeeds, you can run a callback using "then"
     });
 
-  new Is("john.doefakeemail.com")
+  Is("john.doefakeemail.com")
     .is(validEmail)
     .catch(()=&gt;{
       consolde.log("bad email") //if the chain fails, you can run a callback using "catch"
     });
 
-  new Is("john.doefakeemail.com")
+  Is("john.doefakeemail.com")
     .is(validEmail)
     .catch(()=&gt;{
       //bad email
@@ -141,11 +156,26 @@
 
 <pre><code>var foo={bar:undefined};
 
-new Is(foo.bar)
+ Is(foo.bar)
   .isLongerThan(3)
   .catch(()=&gt;{
     console.log("no value") // this gets called no matter what the value of foo.bar is
   })
+</code></pre>
+
+<p>You can also instantiate the chain by either using the <code>new</code> command or by using the <code>Facade</code></p>
+
+<pre><code>Is("foo")
+ .isLongerThan(2)
+ .then(()=&gt;{
+   // callback
+ });
+
+ new jumpkick.Is("foo")
+ .isLongerThan(2)
+ .then(()=&gt;{
+   // callback
+ });
 </code></pre>
       </section>
     </div>
