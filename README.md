@@ -3,7 +3,7 @@ Is
 
 A better way to write JavaScript conditional statements and still have pretty code.
 
-This library was inspired by the Maybe Monad pattern and libraries like Jasmine.js and JQuery. It allows you to to write conditional statements without nested if statements or null checking. 
+This library was inspired by the Maybe Monad pattern and libraries like Jasmine.js and JQuery. It allows you to write conditional statements without nested if statements or null checking. 
 
 ###Installation
 
