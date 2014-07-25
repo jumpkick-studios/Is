@@ -83,3 +83,7 @@ var validObject=function(obj){
 Is({foo:"foo",bar:"bar"}).is(validObject).then(()=>{
     console.log("valid object");
 })
+
+Is({foo:"foo",bar:"bar"}).prop("foo").equals("foo").then(()=>{
+    console.log("valid foo");
+})

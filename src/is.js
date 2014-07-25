@@ -25,9 +25,10 @@ var Is = function (value) {
 var jumpkick;
 (function (jumpkick) {
     var Is = (function () {
-        function Is(value, inverse) {
+        function Is(value, inverse, property) {
             this.value = value;
-            this.inverse = false;
+            this.inverse = inverse;
+            this.property = property;
             this.inverse = inverse || this.inverse;
         }
         Is.prototype.is = function () {
@@ -42,22 +43,18 @@ var jumpkick;
             for (var i = 0; i < args.length; i++) {
                 var test = args[i];
                 if (test.toString() == "NaN") {
-                    if (!isNaN(this.value)) {
+                    if (!isNaN(this.getPropertyOrValue())) {
                         yes = this.inverse;
                     }
                 } else if (typeof test == 'function') {
-                    if (!args[i](this.value)) {
+                    if (!args[i](this.getPropertyOrValue())) {
                         yes = this.inverse;
                     }
-                } else if (test.indexOf("<") > -1) {
-                    return this.checkForLengthOrCompareNumber(test);
-                } else if (test.indexOf(">") > -1) {
+                } else if (test.indexOf("<") > -1 || test.indexOf(">") > -1) {
                     return this.checkForLengthOrCompareNumber(test);
                 } else {
                     if (test) {
-                        if (this.value != test) {
-                            yes = this.inverse;
-                        }
+                        yes = this.equals(test).value ? !this.inverse : this.inverse;
                     }
                 }
             }
@@ -98,175 +95,108 @@ var jumpkick;
             for (var i = 0; i < args.length; i++) {
                 var test = args[i];
                 if (test.toString() == "NaN") {
-                    if (isNaN(this.value)) {
+                    if (isNaN(this.getPropertyOrValue())) {
                         matches++;
                     }
                 } else if (typeof test === 'function') {
-                    if (args[i](this.value)) {
+                    if (args[i](this.getPropertyOrValue())) {
                         matches++;
                     }
-                } else if (test.indexOf("<") > -1) {
-                    if (this.checkForLengthOrCompareNumber(test).value) {
-                        matches++;
-                    }
-                } else if (test.indexOf(">") > -1) {
+                } else if (test.indexOf("<") > -1 || test.indexOf(">") > -1) {
                     if (this.checkForLengthOrCompareNumber(test).value) {
                         matches++;
                     }
                 } else {
                     if (test) {
-                        if (this.value === test) {
-                            matches++;
-                        }
+                        matches += this.equals(test).value ? 1 : 0;
                     }
                 }
             }
 
-            if ((matches > 0 && !this.inverse) || (matches == 0 && this.inverse)) {
-                return new Is(this.value);
-            } else {
-                return new Is();
-            }
+            return (matches > 0 && !this.inverse) || (matches == 0 && this.inverse) ? new Is(this.value) : new Is();
         };
 
         Is.prototype.isLongerThan = function (val) {
             if (!this.value) {
                 return new Is();
             }
-            if (this.inverse) {
-                if (this.value.toString().length < val) {
-                    return new Is(this.value);
-                } else {
-                    return new Is();
-                }
-            } else {
-                if (this.value.toString().length > val) {
-                    return new Is(this.value);
-                } else {
-                    return new Is();
-                }
-            }
+            return (this.inverse ? this.getPropertyOrValue().toString().length < val ? new Is(this.value) : new Is() : this.getPropertyOrValue().toString().length > val ? new Is(this.value) : new Is());
         };
 
         Is.prototype.isShorterThan = function (val) {
             if (!this.value) {
                 return new Is();
             }
-            if (this.inverse) {
-                if (this.value.toString().length > val) {
-                    return new Is(this.value);
-                } else {
-                    return new Is();
-                }
-            } else {
-                if (this.value.toString().length < val) {
-                    return new Is(this.value);
-                } else {
-                    return new Is();
-                }
-            }
+            return (this.inverse ? this.getPropertyOrValue().toString().length > val ? new Is(this.value) : new Is() : this.getPropertyOrValue().toString().length < val ? new Is(this.value) : new Is());
         };
 
         Is.prototype.not = function () {
             if (!this.value) {
                 return new Is();
             }
-            return new Is(this.value, true);
+            return new Is(this.value, true, this.property);
         };
 
         Is.prototype.equals = function (val) {
             if (!this.value) {
                 return new Is();
             }
-            if (this.inverse) {
-                if (this.value != val) {
-                    return new Is(this.value);
-                } else {
-                    return new Is();
-                }
-            } else {
-                if (this.value === val) {
-                    return new Is(this.value);
-                } else {
-                    return new Is();
-                }
-            }
-        };
-
-        Is.prototype.isLessThan = function (val) {
-            if (!this.value) {
-                return new Is();
-            }
-            if (this.inverse) {
-                if (this.value >= val) {
-                    return new Is(this.value);
-                } else {
-                    return new Is();
-                }
-            } else {
-                if (this.value < val) {
-                    return new Is(this.value);
-                } else {
-                    return new Is();
-                }
-            }
+            return (this.inverse ? this.getPropertyOrValue() != val ? new Is(this.value) : new Is() : this.getPropertyOrValue() === val ? new Is(this.value) : new Is());
         };
 
         Is.prototype.isNumber = function () {
             if (!this.value) {
                 return new Is();
             }
-            if (this.inverse) {
-                return typeof this.value == "number" ? new Is() : new Is(this.value);
-            } else {
-                return typeof this.value != "number" ? new Is() : new Is(this.value);
+            return (this.inverse ? typeof this.getPropertyOrValue() != "number" ? new Is(this.value) : new Is() : typeof this.getPropertyOrValue() == "number" ? new Is(this.value) : new Is());
+        };
+
+        Is.prototype.isLessThan = function (val) {
+            if (!this.value) {
+                return new Is();
             }
+            return (this.inverse ? this.getPropertyOrValue() >= val ? new Is(this.value) : new Is() : this.getPropertyOrValue() < val ? new Is(this.value) : new Is());
         };
 
         Is.prototype.isGreaterThan = function (val) {
             if (!this.value) {
                 return new Is();
             }
-            if (this.inverse) {
-                if (this.value <= val) {
-                    return new Is(this.value);
-                } else {
-                    return new Is();
-                }
-            } else {
-                if (this.value > val) {
-                    return new Is(this.value);
-                } else {
-                    return new Is();
-                }
-            }
+            return (this.inverse ? this.getPropertyOrValue() <= val ? new Is(this.value) : new Is() : this.getPropertyOrValue() > val ? new Is(this.value) : new Is());
         };
 
-        Is.prototype.hasValueOf = function (val) {
+        Is.prototype.contains = function (val) {
             if (!this.value) {
                 return new Is();
             }
-            if (!Array.isArray(this.value)) {
+            if (!Array.isArray(this.getPropertyOrValue())) {
                 return new Is();
             }
-            if (this.inverse) {
-                return this.value.indexOf(val) == -1 ? new Is(this.value) : new Is();
-            } else {
-                return this.value.indexOf(val) == -1 ? new Is() : new Is(this.value);
-            }
+            return (this.inverse ? this.getPropertyOrValue().indexOf(val) == -1 ? new Is(this.value) : new Is() : this.getPropertyOrValue().indexOf(val) > -1 ? new Is(this.value) : new Is());
         };
 
         Is.prototype.isEmptyArray = function () {
             if (!this.value) {
                 return new Is();
             }
-            if (!Array.isArray(this.value)) {
+            if (!Array.isArray(this.getPropertyOrValue())) {
                 return new Is();
             }
-            if (this.inverse) {
-                return this.value.length > 0 ? new Is(this.value) : new Is();
+            return (this.inverse ? this.getPropertyOrValue().length > 0 ? new Is(this.value) : new Is() : this.getPropertyOrValue().length == 0 ? new Is(this.value) : new Is());
+        };
+
+        Is.prototype.getPropertyOrValue = function () {
+            return (this.property ? this.value[this.property] : this.value);
+        };
+
+        Is.prototype.prop = function (prop) {
+            if (!this.value) {
+                return new Is();
+            }
+            if (!this.value[prop]) {
+                return new Is();
             } else {
-                return this.value.length > 0 ? new Is() : new Is(this.value);
+                return new Is(this.value, this.inverse, prop);
             }
         };
 
@@ -274,7 +204,6 @@ var jumpkick;
             if (!this.value) {
                 return new Is();
             }
-
             func();
             return new Is(this.value);
         };

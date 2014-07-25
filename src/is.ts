@@ -31,9 +31,8 @@ var Is = function (value?:any):jumpkick.Is {
 
 module jumpkick {
     export class Is {
-        private inverse:boolean = false;
 
-        constructor(public value?:any, inverse?:boolean) {
+        constructor(public value?:any, private inverse?:boolean, private property?:any) {
             this.inverse = inverse || this.inverse;
         }
 
@@ -45,25 +44,18 @@ module jumpkick {
             for (var i = 0; i < args.length; i++) {
                 var test:any = args[i];
                 if (test.toString() == "NaN") {
-                    if (!isNaN(this.value)) {
+                    if (!isNaN(this.getPropertyOrValue())) {
                         yes = this.inverse;
                     }
                 } else if (typeof test == 'function') {
-                    if (!args[i](this.value)) {
+                    if (!args[i](this.getPropertyOrValue())) {
                         yes = this.inverse;
                     }
-                } else if (test.indexOf("<") > -1) {
+                } else if (test.indexOf("<") > -1 || test.indexOf(">") > -1) {
                     return this.checkForLengthOrCompareNumber(test);
-                }
-
-                else if (test.indexOf(">") > -1) {
-                    return this.checkForLengthOrCompareNumber(test);
-                }
-                else {
+                } else {
                     if (test) {
-                        if (this.value != test) {
-                            yes = this.inverse;
-                        }
+                        yes = this.equals(test).value ? !this.inverse : this.inverse;
                     }
                 }
             }
@@ -102,164 +94,84 @@ module jumpkick {
             for (var i = 0; i < args.length; i++) {
                 var test:any = args[i];
                 if (test.toString() == "NaN") {
-                    if (isNaN(this.value)) {
+                    if (isNaN(this.getPropertyOrValue())) {
                         matches++;
                     }
                 } else if (typeof test === 'function') {
-                    if (args[i](this.value)) {
+                    if (args[i](this.getPropertyOrValue())) {
                         matches++;
                     }
-                } else if (test.indexOf("<") > -1) {
+                } else if (test.indexOf("<") > -1 || test.indexOf(">") > -1) {
                     if (this.checkForLengthOrCompareNumber(test).value) {
                         matches++;
                     }
-                } else if (test.indexOf(">") > -1) {
-                    if (this.checkForLengthOrCompareNumber(test).value) {
-                        matches++;
-                    }
-                }
-                else {
+                } else {
                     if (test) {
-                        if (this.value === test) {
-                            matches++;
-                        }
+                        matches += this.equals(test).value ? 1 : 0;
                     }
                 }
             }
 
-            if ((matches > 0 && !this.inverse) || (matches == 0 && this.inverse)) {
-                return new Is(this.value)
-            } else {
-                return new Is();
-            }
+            return (matches > 0 && !this.inverse) || (matches == 0 && this.inverse) ? new Is(this.value) : new Is();
         }
 
-        public isLongerThan(val:number) {
+        public isLongerThan(val:number):Is {
             if (!this.value) {
                 return new Is();
             }
-            if (this.inverse) {
-                if (this.value.toString().length < val) {
-                    return new Is(this.value)
-                } else {
-                    return new Is();
-                }
-            } else {
-                if (this.value.toString().length > val) {
-                    return new Is(this.value)
-                } else {
-                    return new Is();
-                }
-            }
+            return (this.inverse ? this.getPropertyOrValue().toString().length < val ? new Is(this.value) : new Is() : this.getPropertyOrValue().toString().length > val ? new Is(this.value) : new Is());
         }
 
-        public isShorterThan(val:number) {
+        public isShorterThan(val:number):Is {
             if (!this.value) {
                 return new Is();
             }
-            if (this.inverse) {
-                if (this.value.toString().length > val) {
-                    return new Is(this.value)
-                } else {
-                    return new Is();
-                }
-            } else {
-                if (this.value.toString().length < val) {
-                    return new Is(this.value)
-                } else {
-                    return new Is();
-                }
-            }
+            return (this.inverse ? this.getPropertyOrValue().toString().length > val ? new Is(this.value) : new Is() : this.getPropertyOrValue().toString().length < val ? new Is(this.value) : new Is());
         }
 
         public not():Is {
             if (!this.value) {
                 return new Is();
             }
-            return new Is(this.value, true)
+            return new Is(this.value, true, this.property)
         }
 
         public equals(val:any):Is {
             if (!this.value) {
                 return new Is();
             }
-            if (this.inverse) {
-                if (this.value != val) {
-                    return new Is(this.value)
-                } else {
-                    return new Is();
-                }
-            } else {
-                if (this.value === val) {
-                    return new Is(this.value)
-                } else {
-                    return new Is();
-                }
-            }
-        }
-
-        public isLessThan(val:number):Is {
-            if (!this.value) {
-                return new Is();
-            }
-            if (this.inverse) {
-                if (this.value >= val) {
-                    return new Is(this.value)
-                } else {
-                    return new Is();
-                }
-            } else {
-                if (this.value < val) {
-                    return new Is(this.value)
-                } else {
-                    return new Is();
-                }
-            }
+            return (this.inverse ? this.getPropertyOrValue() != val ? new Is(this.value) : new Is() : this.getPropertyOrValue() === val ? new Is(this.value) : new Is())
         }
 
         public isNumber():Is {
             if (!this.value) {
                 return new Is();
             }
-            if (this.inverse) {
-                return typeof this.value == "number" ? new Is() : new Is(this.value);
+            return (this.inverse ? typeof this.getPropertyOrValue() != "number" ? new Is(this.value) : new Is() : typeof this.getPropertyOrValue() == "number" ? new Is(this.value) : new Is())
+        }
 
-            } else {
-                return typeof this.value != "number" ? new Is() : new Is(this.value);
+        public isLessThan(val:number):Is {
+            if (!this.value) {
+                return new Is();
             }
+            return (this.inverse ? this.getPropertyOrValue() >= val ? new Is(this.value) : new Is() : this.getPropertyOrValue() < val ? new Is(this.value) : new Is())
         }
 
         public isGreaterThan(val:number):Is {
             if (!this.value) {
                 return new Is();
             }
-            if (this.inverse) {
-                if (this.value <= val) {
-                    return new Is(this.value)
-                } else {
-                    return new Is();
-                }
-            } else {
-                if (this.value > val) {
-                    return new Is(this.value)
-                } else {
-                    return new Is();
-                }
-            }
+            return (this.inverse ? this.getPropertyOrValue() <= val ? new Is(this.value) : new Is() : this.getPropertyOrValue() > val ? new Is(this.value) : new Is());
         }
 
-        public hasValueOf(val:any) {
+        public contains(val:any) {
             if (!this.value) {
                 return new Is();
             }
-            if (!Array.isArray(this.value)) {
+            if (!Array.isArray(this.getPropertyOrValue())) {
                 return new Is();
             }
-            if (this.inverse) {
-                return this.value.indexOf(val)==-1?new Is(this.value):new Is();
-            } else {
-                return this.value.indexOf(val)==-1?new Is():new Is(this.value);
-            }
+            return (this.inverse ? this.getPropertyOrValue().indexOf(val) == -1 ? new Is(this.value) : new Is() : this.getPropertyOrValue().indexOf(val) > -1 ? new Is(this.value) : new Is());
         }
 
 
@@ -267,13 +179,25 @@ module jumpkick {
             if (!this.value) {
                 return new Is();
             }
-            if (!Array.isArray(this.value)) {
+            if (!Array.isArray(this.getPropertyOrValue())) {
                 return new Is();
             }
-            if (this.inverse) {
-                return this.value.length>0?new Is(this.value):new Is();
-            } else {
-                return this.value.length>0?new Is():new Is(this.value);
+            return (this.inverse ? this.getPropertyOrValue().length > 0 ? new Is(this.value) : new Is() : this.getPropertyOrValue().length == 0 ? new Is(this.value) : new Is());
+        }
+
+        private getPropertyOrValue():any {
+            return (this.property ? this.value[this.property] : this.value);
+        }
+
+        public prop(prop) {
+            if (!this.value) {
+                return new Is();
+            }
+            if (!this.value[prop]) {
+                return new Is();
+            }
+            else {
+                return new Is(this.value, this.inverse, prop);
             }
         }
 
@@ -281,7 +205,6 @@ module jumpkick {
             if (!this.value) {
                 return new Is();
             }
-
             func();
             return new Is(this.value);
         }

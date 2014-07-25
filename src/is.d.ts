@@ -3,7 +3,8 @@ declare module jumpkick {
     class Is {
         public value: any;
         private inverse;
-        constructor(value?: any, inverse?: boolean);
+        private property;
+        constructor(value?: any, inverse?: boolean, property?: any);
         public is(...args: any[]): any;
         private checkForLengthOrCompareNumber(test);
         public any(...args: any[]): any;
@@ -14,8 +15,10 @@ declare module jumpkick {
         public isLessThan(val: number): Is;
         public isNumber(): Is;
         public isGreaterThan(val: number): Is;
-        public hasValueOf(val: any): Is;
+        public contains(val: any): Is;
         public isEmptyArray(): Is;
+        private getPropertyOrValue();
+        public prop(prop: any): Is;
         public then(func: any): Is;
         public catch(func: any): Is;
         public finally(func: any): Is;
