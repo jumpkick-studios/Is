@@ -126,6 +126,37 @@ var foo={bar:undefined};
   })
 ```
 
+You can even work with complex objects and work with their properties. So for instance, maybe working with form values:
+```
+ var validEmail = function (val:string) {
+            var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(val);
+        };
+        var complexObject={
+            arr:[1,2,3],
+            str: "foo",
+            num: 10,
+            email:"joe.smith@fakeemail.com"
+        }
+        Is(complexObject)
+            .prop("arr") // prop looks for property of complexObject named "arr"
+            .not().isEmptyArray()
+            .prop("arr") //must be called prior to each validation check
+            .contains(3)
+            .prop("str")
+            .isLongerThan(2)
+            .prop("str")
+            .isShorterThan(4)
+            .prop("num")
+            .isNumber()
+            .prop("email")
+            .is(validEmail)
+            .then(()=> {
+                // all of these things are true -- submit form?
+            }).catch(()=> {
+                //at least one of these things are not true
+            });
+ ```
 You can also instantiate the chain by either using the `new` command or by using the `Facade`
 
 ```
