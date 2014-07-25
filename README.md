@@ -82,7 +82,7 @@ There are several methods available for checking the input value. If a validatio
       
   Is([1,2,3])
     .not().emptyArray() //check if array is empty
-    .hasValue0f(2) //check if array has a specific value in it
+    .contains(2) //check if array has a specific value in it
     
     
   var validEmail = function (val:string) {
