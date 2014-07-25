@@ -118,8 +118,8 @@
       .is("length&gt;1") // check for string length
 
   Is([1,2,3])
-    .not().isEmptyArray() //check if array is empty
-    .hasValue0f(2) //check if array has a specific value in it
+    .not().emptyArray() //check if array is empty
+    .contains(2) //check if array has a specific value in it
 
 
   var validEmail = function (val:string) {
@@ -161,6 +161,38 @@
   .catch(()=&gt;{
     console.log("no value") // this gets called no matter what the value of foo.bar is
   })
+</code></pre>
+
+<p>You can even work with complex objects and work with their properties. So for instance, maybe working with form values:</p>
+
+<pre><code> var validEmail = function (val:string) {
+            var re = /^(([^&lt;&gt;()[\]\\.,;:\s@\"]+(\.[^&lt;&gt;()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(val);
+        };
+        var complexObject={
+            arr:[1,2,3],
+            str: "foo",
+            num: 10,
+            email:"joe.smith@fakeemail.com"
+        }
+        Is(complexObject)
+            .prop("arr") // prop looks for property of complexObject named "arr"
+            .not().isEmptyArray()
+            .prop("arr") //must be called prior to each validation check
+            .contains(3)
+            .prop("str")
+            .isLongerThan(2)
+            .prop("str")
+            .isShorterThan(4)
+            .prop("num")
+            .isNumber()
+            .prop("email")
+            .is(validEmail)
+            .then(()=&gt; {
+                // all of these things are true -- submit form?
+            }).catch(()=&gt; {
+                //at least one of these things are not true
+            });
 </code></pre>
 
 <p>You can also instantiate the chain by either using the <code>new</code> command or by using the <code>Facade</code></p>
