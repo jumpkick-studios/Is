@@ -60,6 +60,8 @@ describe("Is", function () {
         expect(count).toBe(1);
     });
 
+
+
     it("should not trigger 'then' if the chain is not valid", function () {
         var count:number = 0;
         Is("foo")
@@ -81,6 +83,38 @@ describe("Is", function () {
         expect(count).toBe(2);
     });
 
+
+    it("should trigger 'then' if  all are true", function () {
+        var count:number = 0;
+        Is("foo")
+            .is("foo")
+            .then(()=> {
+                count = 1;
+            });
+        expect(count).toBe(1);
+    });
+
+
+    it("should not trigger 'then' if  not all are true", function () {
+        var count:number = 0;
+        Is("foo")
+            .is("foo","bar")
+            .then(()=> {
+                count = 1;
+            });
+        expect(count).toBe(0);
+    });
+
+    it("should not trigger 'then' if  not all are true", function () {
+        var count:number = 0;
+        Is("foo")
+            .is("foo","length<3")
+            .then(()=> {
+                count = 1;
+            });
+        expect(count).toBe(0);
+    });
+
     it("should trigger 'then' if  any are true", function () {
         var count:number = 0;
         Is("foo")
@@ -89,6 +123,26 @@ describe("Is", function () {
                 count = 1;
             });
         expect(count).toBe(1);
+    });
+
+    it("should trigger 'then' if  any are true for equals", function () {
+        var count:number = 0;
+        Is("foo")
+            .any("foo")
+            .then(()=> {
+                count = 1;
+            });
+        expect(count).toBe(1);
+    });
+
+    it("should trigger 'then' if  any are not true for equals", function () {
+        var count:number = 0;
+        Is("foo")
+            .any("foo2")
+            .then(()=> {
+                count = 1;
+            });
+        expect(count).toBe(0);
     });
 
     it("should trigger then if any shorthand length checks are true", function () {
@@ -133,7 +187,7 @@ describe("Is", function () {
     it("should return true if an array has a value", function () {
         var count:number;
         Is([1, 2, 3])
-            .hasValueOf(2)
+            .contains(2)
             .then(()=> {
                 count = 1;
             }).catch(()=> {
@@ -145,7 +199,7 @@ describe("Is", function () {
     it("should return true if an array does not have a value", function () {
         var count:number;
         Is([1, 2, 3])
-            .hasValueOf("foo")
+            .contains("foo")
             .then(()=> {
                 count = 1;
             }).catch(()=> {
@@ -157,7 +211,7 @@ describe("Is", function () {
     it("should return true if an array does not have a value and inverse is true", function () {
         var count:number;
         Is([1, 2, 3])
-            .not().hasValueOf("foo")
+            .not().contains("foo")
             .then(()=> {
                 count = 1;
             }).catch(()=> {
@@ -169,7 +223,7 @@ describe("Is", function () {
     it("should return false if an array does  have a value and inverse is true", function () {
         var count:number;
         Is([1, 2, 3])
-            .not().hasValueOf(2)
+            .not().contains(2)
             .then(()=> {
                 count = 1;
             }).catch(()=> {
@@ -224,6 +278,70 @@ describe("Is", function () {
                 count = 0;
             });
         expect(count).toBe(1);
+    });
+
+    it("should allow you to check a param of an object", function () {
+        var count:number;
+        Is({foo:"bar",bar:"baz"})
+            .prop("foo")
+            .equals("bar")
+            .prop("bar")
+            .isLongerThan(2)
+            .then(()=> {
+                count = 1;
+            }).catch(()=> {
+                count = 0;
+            });
+        expect(count).toBe(1);
+
+    });
+
+    it("should allow you to check a param of an object if inverse is false", function () {
+        var count:number;
+        Is({foo:"bar"})
+            .prop("foo")
+            .not().equals("bar2")
+            .then(()=> {
+                count = 1;
+            }).catch(()=> {
+                count = 0;
+            });
+        expect(count).toBe(1);
+
+    });
+
+    it("should allow you to check all types of object params", function () {
+        var count:number;
+        var validEmail = function (val:string) {
+            var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(val);
+        };
+        var complexObject={
+            arr:[1,2,3],
+            str: "foo",
+            num: 10,
+            email:"joe.smith@fakeemail.com"
+        }
+        Is(complexObject)
+            .prop("arr")
+            .not().isEmptyArray()
+            .prop("arr")
+            .contains(3)
+            .prop("str")
+            .isLongerThan(2)
+            .prop("str")
+            .isShorterThan(4)
+            .prop("num")
+            .isNumber()
+            .prop("email")
+            .is(validEmail)
+            .then(()=> {
+                count = 1;
+            }).catch(()=> {
+                count = 0;
+            });
+        expect(count).toBe(1);
+
     });
 });
 

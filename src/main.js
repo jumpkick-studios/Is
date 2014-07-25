@@ -60,4 +60,8 @@ var validObject = function (obj) {
 Is({ foo: "foo", bar: "bar" }).is(validObject).then(function () {
     console.log("valid object");
 });
+
+Is({ foo: "foo", bar: "bar" }).prop("foo").equals("foo").then(function () {
+    console.log("valid foo");
+});
 //# sourceMappingURL=main.js.map

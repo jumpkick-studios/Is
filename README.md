@@ -81,7 +81,7 @@ There are several methods available for checking the input value. If a validatio
       .is("length>1") // check for string length
       
   Is([1,2,3])
-    .not().isEmptyArray() //check if array is empty
+    .not().emptyArray() //check if array is empty
     .hasValue0f(2) //check if array has a specific value in it
     
     
