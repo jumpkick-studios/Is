@@ -236,6 +236,7 @@ module jumpkick {
             func();
             return new Is(this.value);
         }
+
     }
 }
 

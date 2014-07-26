@@ -320,6 +320,7 @@ describe("Is", function () {
             num: 10,
             email:"joe.smith@fakeemail.com"
         };
+
         Is(complexObject)
             .prop("arr").not.emptyArray()
             .and.prop("arr").contains(3)
