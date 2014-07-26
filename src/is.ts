@@ -36,7 +36,29 @@ module jumpkick {
             this.inverse = inverse || this.inverse;
         }
 
-        public is(...args):any {
+        public get not():Is {
+            this.inverse = true;
+            return this;
+        }
+
+        public get a():Is {
+            return this;
+        }
+
+        public get and():Is {
+            return this;
+        }
+
+        public isNot():Is {
+            this.inverse = true;
+            return this;
+        }
+
+        public isA():Is {
+            return this;
+        }
+
+        public matching(...args):any {
             if (!this.value) {
                 return new Is();
             }
@@ -55,7 +77,7 @@ module jumpkick {
                     return this.checkForLengthOrCompareNumber(test);
                 } else {
                     if (test) {
-                        yes = this.equals(test).value ? !this.inverse : this.inverse;
+                        yes = this.equalTo(test).value ? !this.inverse : this.inverse;
                     }
                 }
             }
@@ -71,21 +93,21 @@ module jumpkick {
             if (test.indexOf("<") > -1) {
                 var testArray:string[] = test.split("<");
                 if (testArray[0] == "")
-                    return this.isLessThan(parseInt(testArray[1]));
+                    return this.lessThan(parseInt(testArray[1]));
                 if (testArray[0] == "length")
-                    return this.isShorterThan(parseInt(testArray[1]))
+                    return this.shorterThan(parseInt(testArray[1]))
             }
 
             else if (test.indexOf(">") > -1) {
                 var testArray:string[] = test.split(">");
                 if (testArray[0] == "")
-                    return this.isGreaterThan(parseInt(testArray[1]));
+                    return this.greaterThan(parseInt(testArray[1]));
                 if (testArray[0] == "length")
-                    return this.isLongerThan(parseInt(testArray[1]))
+                    return this.longerThan(parseInt(testArray[1]))
             }
         }
 
-        public any(...args):any {
+        public matchingAny(...args):any {
             if (!this.value) {
                 return new Is();
             }
@@ -107,7 +129,7 @@ module jumpkick {
                     }
                 } else {
                     if (test) {
-                        matches += this.equals(test).value ? 1 : 0;
+                        matches += this.equalTo(test).value ? 1 : 0;
                     }
                 }
             }
@@ -115,49 +137,43 @@ module jumpkick {
             return (matches > 0 && !this.inverse) || (matches == 0 && this.inverse) ? new Is(this.value) : new Is();
         }
 
-        public isLongerThan(val:number):Is {
+        public longerThan(val:number):Is {
             if (!this.value) {
                 return new Is();
             }
             return (this.inverse ? this.getPropertyOrValue().toString().length < val ? new Is(this.value) : new Is() : this.getPropertyOrValue().toString().length > val ? new Is(this.value) : new Is());
         }
 
-        public isShorterThan(val:number):Is {
+        public shorterThan(val:number):Is {
             if (!this.value) {
                 return new Is();
             }
             return (this.inverse ? this.getPropertyOrValue().toString().length > val ? new Is(this.value) : new Is() : this.getPropertyOrValue().toString().length < val ? new Is(this.value) : new Is());
         }
 
-        public not():Is {
-            if (!this.value) {
-                return new Is();
-            }
-            return new Is(this.value, true, this.property)
-        }
 
-        public equals(val:any):Is {
+        public equalTo(val:any):Is {
             if (!this.value) {
                 return new Is();
             }
             return (this.inverse ? this.getPropertyOrValue() != val ? new Is(this.value) : new Is() : this.getPropertyOrValue() === val ? new Is(this.value) : new Is())
         }
 
-        public isNumber():Is {
+        public numeric():Is {
             if (!this.value) {
                 return new Is();
             }
             return (this.inverse ? typeof this.getPropertyOrValue() != "number" ? new Is(this.value) : new Is() : typeof this.getPropertyOrValue() == "number" ? new Is(this.value) : new Is())
         }
 
-        public isLessThan(val:number):Is {
+        public lessThan(val:number):Is {
             if (!this.value) {
                 return new Is();
             }
             return (this.inverse ? this.getPropertyOrValue() >= val ? new Is(this.value) : new Is() : this.getPropertyOrValue() < val ? new Is(this.value) : new Is())
         }
 
-        public isGreaterThan(val:number):Is {
+        public greaterThan(val:number):Is {
             if (!this.value) {
                 return new Is();
             }
@@ -175,7 +191,7 @@ module jumpkick {
         }
 
 
-        public isEmptyArray() {
+        public emptyArray() {
             if (!this.value) {
                 return new Is();
             }

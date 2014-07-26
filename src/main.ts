@@ -5,14 +5,12 @@ var validEmail = function (val:string) {
     return re.test(val);
 };
 
-
-
 var foo = {bar: "bar"};
 Is(foo.bar)
-    .is("length>2")
-    .not().equals("bar2")
-    .isShorterThan(4)
-    .isLongerThan(2)
+    .matching("length>2")
+    .not.equalTo("bar2")
+    .shorterThan(4)
+    .longerThan(2)
     .then(()=> {
         console.log("end of the chain, all is well");
     })
@@ -22,27 +20,27 @@ Is(foo.bar)
 
 
 Is("john.doe@fakeemail.com")
-    .is(validEmail).then(()=> {
+    .matching(validEmail).then(()=> {
         console.log("this is a valid email");
     });
 
 Is("john.doe.fakeemail.com")
-    .is(validEmail).then(()=> {
+    .matching(validEmail).then(()=> {
         console.log("this is a valid email");
     }).catch(()=> {
         console.log("nope, bad email");
     });
 
 Is(1)
-    .isLessThan(4)
+    .lessThan(4)
     .then(()=> {
         console.log("<4");
     })
-    .is(">0")
+    .matching(">0")
     .then(()=> {
         console.log(">0");
     })
-    .is("<1")
+    .matching("<1")
     .then(()=> {
         console.log("it is less than 4");
     }).catch(()=> {
@@ -55,8 +53,9 @@ Is("foo").then(()=> {
     console.log("is  null");
 });
 
-Is("foo") .any("length<4)","length>10").then(()=>{
+Is("foo").matchingAny("length<4)","length>10").then(()=>{
     console.log("or works");
+
 });
 
 Is(undefined).
@@ -68,7 +67,7 @@ Is(undefined).
     });
 
 Is("john.doe@fakeemail.com")
-    .not().any(validEmail, "foo")
+    .not.matchingAny(validEmail, "foo")
     .then(()=> {
         console.log("it is a valid email or it is 'foo'");
     })
@@ -80,10 +79,14 @@ var validObject=function(obj){
   return (obj.foo&&obj.foo.length>0)&& (obj.bar&&obj.bar.length<4);
 };
 
-Is({foo:"foo",bar:"bar"}).is(validObject).then(()=>{
+Is({foo:"foo",bar:"bar"}).matching(validObject).then(()=>{
     console.log("valid object");
 })
 
-Is({foo:"foo",bar:"bar"}).prop("foo").equals("foo").then(()=>{
+Is({foo:"foo",bar:"bar"}).prop("foo").equalTo("foo").then(()=>{
     console.log("valid foo");
+})
+
+Is("aaa").a.not.numeric().then(()=>{
+    console.log("a prop");
 })

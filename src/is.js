@@ -31,7 +31,41 @@ var jumpkick;
             this.property = property;
             this.inverse = inverse || this.inverse;
         }
-        Is.prototype.is = function () {
+        Object.defineProperty(Is.prototype, "not", {
+            get: function () {
+                this.inverse = true;
+                return this;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(Is.prototype, "a", {
+            get: function () {
+                return this;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Object.defineProperty(Is.prototype, "and", {
+            get: function () {
+                return this;
+            },
+            enumerable: true,
+            configurable: true
+        });
+
+        Is.prototype.isNot = function () {
+            this.inverse = true;
+            return this;
+        };
+
+        Is.prototype.isA = function () {
+            return this;
+        };
+
+        Is.prototype.matching = function () {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
                 args[_i] = arguments[_i + 0];
@@ -54,7 +88,7 @@ var jumpkick;
                     return this.checkForLengthOrCompareNumber(test);
                 } else {
                     if (test) {
-                        yes = this.equals(test).value ? !this.inverse : this.inverse;
+                        yes = this.equalTo(test).value ? !this.inverse : this.inverse;
                     }
                 }
             }
@@ -70,19 +104,19 @@ var jumpkick;
             if (test.indexOf("<") > -1) {
                 var testArray = test.split("<");
                 if (testArray[0] == "")
-                    return this.isLessThan(parseInt(testArray[1]));
+                    return this.lessThan(parseInt(testArray[1]));
                 if (testArray[0] == "length")
-                    return this.isShorterThan(parseInt(testArray[1]));
+                    return this.shorterThan(parseInt(testArray[1]));
             } else if (test.indexOf(">") > -1) {
                 var testArray = test.split(">");
                 if (testArray[0] == "")
-                    return this.isGreaterThan(parseInt(testArray[1]));
+                    return this.greaterThan(parseInt(testArray[1]));
                 if (testArray[0] == "length")
-                    return this.isLongerThan(parseInt(testArray[1]));
+                    return this.longerThan(parseInt(testArray[1]));
             }
         };
 
-        Is.prototype.any = function () {
+        Is.prototype.matchingAny = function () {
             var args = [];
             for (var _i = 0; _i < (arguments.length - 0); _i++) {
                 args[_i] = arguments[_i + 0];
@@ -108,7 +142,7 @@ var jumpkick;
                     }
                 } else {
                     if (test) {
-                        matches += this.equals(test).value ? 1 : 0;
+                        matches += this.equalTo(test).value ? 1 : 0;
                     }
                 }
             }
@@ -116,49 +150,42 @@ var jumpkick;
             return (matches > 0 && !this.inverse) || (matches == 0 && this.inverse) ? new Is(this.value) : new Is();
         };
 
-        Is.prototype.isLongerThan = function (val) {
+        Is.prototype.longerThan = function (val) {
             if (!this.value) {
                 return new Is();
             }
             return (this.inverse ? this.getPropertyOrValue().toString().length < val ? new Is(this.value) : new Is() : this.getPropertyOrValue().toString().length > val ? new Is(this.value) : new Is());
         };
 
-        Is.prototype.isShorterThan = function (val) {
+        Is.prototype.shorterThan = function (val) {
             if (!this.value) {
                 return new Is();
             }
             return (this.inverse ? this.getPropertyOrValue().toString().length > val ? new Is(this.value) : new Is() : this.getPropertyOrValue().toString().length < val ? new Is(this.value) : new Is());
         };
 
-        Is.prototype.not = function () {
-            if (!this.value) {
-                return new Is();
-            }
-            return new Is(this.value, true, this.property);
-        };
-
-        Is.prototype.equals = function (val) {
+        Is.prototype.equalTo = function (val) {
             if (!this.value) {
                 return new Is();
             }
             return (this.inverse ? this.getPropertyOrValue() != val ? new Is(this.value) : new Is() : this.getPropertyOrValue() === val ? new Is(this.value) : new Is());
         };
 
-        Is.prototype.isNumber = function () {
+        Is.prototype.numeric = function () {
             if (!this.value) {
                 return new Is();
             }
             return (this.inverse ? typeof this.getPropertyOrValue() != "number" ? new Is(this.value) : new Is() : typeof this.getPropertyOrValue() == "number" ? new Is(this.value) : new Is());
         };
 
-        Is.prototype.isLessThan = function (val) {
+        Is.prototype.lessThan = function (val) {
             if (!this.value) {
                 return new Is();
             }
             return (this.inverse ? this.getPropertyOrValue() >= val ? new Is(this.value) : new Is() : this.getPropertyOrValue() < val ? new Is(this.value) : new Is());
         };
 
-        Is.prototype.isGreaterThan = function (val) {
+        Is.prototype.greaterThan = function (val) {
             if (!this.value) {
                 return new Is();
             }
@@ -175,7 +202,7 @@ var jumpkick;
             return (this.inverse ? this.getPropertyOrValue().indexOf(val) == -1 ? new Is(this.value) : new Is() : this.getPropertyOrValue().indexOf(val) > -1 ? new Is(this.value) : new Is());
         };
 
-        Is.prototype.isEmptyArray = function () {
+        Is.prototype.emptyArray = function () {
             if (!this.value) {
                 return new Is();
             }
@@ -223,4 +250,3 @@ var jumpkick;
     })();
     jumpkick.Is = Is;
 })(jumpkick || (jumpkick = {}));
-//# sourceMappingURL=is.js.map

@@ -44,9 +44,9 @@ A better way to handle this is to write the code in such a way that when any sin
 
   var foo="bar";
   Is(foo)
-    .isLongerThan(0).
-    .equals("bar")
-    .not().equals("bar2")
+    .longerThan(0).
+    .equalTo("bar")
+    .not.equalTo("bar2")
     .then(()=>{
       console.log("success")
     })
@@ -62,16 +62,16 @@ There are several methods available for checking the input value. If a validatio
 ```  
   var foo="bar";
   Is(foo)
-  .isLongerThan(number) // checks the length of a string for minimum length 
-  .isShorterThan(number) // checks the length of a string for maximum length
-  .equals("bar") // checks for exact value
-  .not() // inverts the next validation
-  .equals("baz")
+  .longerThan(number) // checks the length of a string for minimum length 
+  .shorterThan(number) // checks the length of a string for maximum length
+  .equalTo("bar") // checks for exact value
+  .not // inverts the next validation
+  .equalTo("baz")
   
   Is(1000)
-  .isNumber() // returns true if the value is a number
-  .isLessThan(10000) // checks for maximum value
-  .isGreaterThan(0) // checks for minimum value
+  .numeric() // returns true if the value is a number
+  .lessThan(10000) // checks for maximum value
+  .greaterThan(0) // checks for minimum value
   
   Is(100)
     .any("<101",">1000") // you can use a shorthand and check for any of these things to be true
@@ -81,8 +81,8 @@ There are several methods available for checking the input value. If a validatio
       .is("length>1") // check for string length
       
   Is([1,2,3])
-    .not().emptyArray() //check if array is empty
-    .hasValue0f(2) //check if array has a specific value in it
+    .not.emptyArray() //check if array is empty
+    .contains(2) //check if array has a specific value in it
     
     
   var validEmail = function (val:string) {
@@ -120,7 +120,7 @@ The best part of all this is that you no longer need to worry about undefined va
 var foo={bar:undefined};
 
  Is(foo.bar)
-  .isLongerThan(3)
+  .longerThan(3)
   .catch(()=>{
     console.log("no value") // this gets called no matter what the value of foo.bar is
   })
@@ -139,35 +139,30 @@ You can even work with complex objects and work with their properties. So for in
             email:"joe.smith@fakeemail.com"
         }
         Is(complexObject)
-            .prop("arr") // prop looks for property of complexObject named "arr"
-            .not().isEmptyArray()
-            .prop("arr") //must be called prior to each validation check
-            .contains(3)
-            .prop("str")
-            .isLongerThan(2)
-            .prop("str")
-            .isShorterThan(4)
-            .prop("num")
-            .isNumber()
-            .prop("email")
-            .is(validEmail)
-            .then(()=> {
+         .prop("arr").not.emptyArray()
+         .and.prop("arr").contains(3) // prop looks for property of complexObject named "arr"
+         .and.prop("str").longerThan(2) //must be called prior to each validation check
+         .and.prop("str").shorterThan(4) //"and" makes code more readable
+         .and.prop("str").equalTo("foo")
+         .and.prop("num").numeric()
+         .and.prop("email").matching(validEmail)
+         .then(()=> {
                 // all of these things are true -- submit form?
-            }).catch(()=> {
+         }).catch(()=> {
                 //at least one of these things are not true
-            });
+         });
  ```
 You can also instantiate the chain by either using the `new` command or by using the `Facade`
 
 ```
 Is("foo")
- .isLongerThan(2)
+ .longerThan(2)
  .then(()=>{
    // callback
  });
  
  new jumpkick.Is("foo")
- .isLongerThan(2)
+ .longerThan(2)
  .then(()=>{
    // callback
  });
