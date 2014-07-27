@@ -63,12 +63,16 @@ module jumpkick {
         }
 
         public get or():Is {
-            this.testingAny=true;
+            this.testingAny = true;
             return this;
         }
 
+        private nothing():boolean {
+            return (!this.value && !this.testingAny);
+        }
+
         public matching(...args):any {
-            if (!this.value&&!this.testingAny) {
+            if (this.nothing()) {
                 return this;
             }
             var yes:boolean = !this.inverse;
@@ -108,7 +112,7 @@ module jumpkick {
             }
             this.inverse = false;
             this.property = null;
-            this.testingAny =false;
+            this.testingAny = false;
             return this;
         }
 
@@ -131,7 +135,7 @@ module jumpkick {
         }
 
         public matchingAny(...args):any {
-            if (!this.value&&!this.testingAny) {
+            if (this.nothing()) {
                 return this;
             }
             var matches:number = 0;
@@ -161,14 +165,14 @@ module jumpkick {
         }
 
         public longerThan(val:number):Is {
-            if (!this.value&&!this.testingAny) {
+            if (this.nothing()) {
                 return this;
             }
             return (this.inverse ? this.getPropertyOrValue().toString().length < val ? this.getReturnedInstance(true) : this.getReturnedInstance(false) : this.getPropertyOrValue().toString().length > val ? this.getReturnedInstance(true) : this.getReturnedInstance(false));
         }
 
         public shorterThan(val:number):Is {
-            if (!this.value&&!this.testingAny) {
+            if (this.nothing()) {
                 return this;
             }
             return (this.inverse ? this.getPropertyOrValue().toString().length > val ? this.getReturnedInstance(true) : this.getReturnedInstance(false) : this.getPropertyOrValue().toString().length < val ? this.getReturnedInstance(true) : this.getReturnedInstance(false));
@@ -176,35 +180,35 @@ module jumpkick {
 
 
         public equalTo(val:any):Is {
-            if (!this.value&&!this.testingAny) {
+            if (this.nothing()) {
                 return this;
             }
             return (this.inverse ? this.getPropertyOrValue() != val ? this.getReturnedInstance(true) : this.getReturnedInstance(false) : this.getPropertyOrValue() === val ? this.getReturnedInstance(true) : this.getReturnedInstance(false))
         }
 
         public numeric():Is {
-            if (!this.value&&!this.testingAny) {
+            if (this.nothing()) {
                 return this;
             }
             return (this.inverse ? typeof this.getPropertyOrValue() != "number" ? this.getReturnedInstance(true) : this.getReturnedInstance(false) : typeof this.getPropertyOrValue() == "number" ? this.getReturnedInstance(true) : this.getReturnedInstance(false))
         }
 
         public lessThan(val:number):Is {
-            if (!this.value&&!this.testingAny) {
+            if (this.nothing()) {
                 return this;
             }
             return (this.inverse ? this.getPropertyOrValue() >= val ? this.getReturnedInstance(true) : this.getReturnedInstance(false) : this.getPropertyOrValue() < val ? this.getReturnedInstance(true) : this.getReturnedInstance(false))
         }
 
         public greaterThan(val:number):Is {
-            if (!this.value&&!this.testingAny) {
+            if (this.nothing()) {
                 return this;
             }
             return (this.inverse ? this.getPropertyOrValue() <= val ? this.getReturnedInstance(true) : this.getReturnedInstance(false) : this.getPropertyOrValue() > val ? this.getReturnedInstance(true) : this.getReturnedInstance(false));
         }
 
         public contains(val:any) {
-            if (!this.value&&!this.testingAny) {
+            if (this.nothing()) {
                 return this;
             }
             if (!Array.isArray(this.getPropertyOrValue())) {
@@ -215,7 +219,7 @@ module jumpkick {
 
 
         public emptyArray() {
-            if (!this.value&&!this.testingAny) {
+            if (this.nothing()) {
                 return this;
             }
             if (!Array.isArray(this.getPropertyOrValue())) {
@@ -225,18 +229,18 @@ module jumpkick {
         }
 
         private getPropertyOrValue():any {
-            if(this.testingAny){
+            if (this.testingAny) {
                 return (this.property ? this.originalValue[this.property] : this.originalValue);
-            }   else{
+            } else {
                 return (this.property ? this.value[this.property] : this.value);
             }
         }
 
         public prop(prop) {
-            if (!this.value &&!this.testingAny) {
+            if (this.nothing()) {
                 return this.getReturnedInstance(false);
             }
-            if (!(this.testingAny?this.originalValue[prop]:this.value[prop])) {
+            if (!(this.testingAny ? this.originalValue[prop] : this.value[prop])) {
                 return this.getReturnedInstance(false);
             }
             else {

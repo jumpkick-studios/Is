@@ -280,7 +280,21 @@ describe("Is", function () {
     });
     it("should return false if none of the or validations are true for objects", function () {
         var count = 0;
-        Is({ foo: 3, bar: "baz" }).prop("foo").greaterThan(15).or.prop("foo").lessThan(2).or.prop("bar").shorterThan(3).then(function () {
+        Is({ foo: 3, bar: "baz" }).prop("foo").greaterThan(15).or.prop("foo").lessThan(2).or.prop("bar").shorterThan(3).or.prop("bar").longerThan(3).then(function () {
+            count = 1;
+        });
+        expect(count).toBe(0);
+    });
+    it("should return true if any of the or validations are true for matchers", function () {
+        var count = 0;
+        Is({ foo: 3, bar: "baz" }).prop("foo").matchingAny(">4", "<2").or.prop("bar").matchingAny("length>2").then(function () {
+            count = 1;
+        });
+        expect(count).toBe(1);
+    });
+    it("should return false if none of the or validations are true for matchers", function () {
+        var count = 0;
+        Is({ foo: 3, bar: "baz" }).prop("foo").matchingAny(">4", "<2").or.prop("bar").matchingAny("length>4").then(function () {
             count = 1;
         });
         expect(count).toBe(0);
