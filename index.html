@@ -152,7 +152,23 @@
 
 </code></pre>
 
-<p>The best part of all this is that you no longer need to worry about undefined variable values. For instance, if you have a value like this:</p>
+<h4>
+<a name="dealing-with-or-statements" class="anchor" href="#dealing-with-or-statements"><span class="octicon octicon-link"></span></a>Dealing with <code>or</code> statements</h4>
+
+<p>One of the matchers above is the <code>matchingAny</code> method. This checks to see if any of the strings, or shorthand matchers are true. But you can also use the <code>or</code> method.</p>
+
+<pre><code>    Is({foo:3,bar:"baz"})
+      .prop("foo").lessThan(2) // this is false, but with the _or_ method immedatiately following it...
+      .or.prop("bar").longerThan(1) //this is true, so the whole chain is valid 
+      .then(()=&gt; {
+           //do something cool here
+      });
+</code></pre>
+
+<h4>
+<a name="checking-for-undefined-variables" class="anchor" href="#checking-for-undefined-variables"><span class="octicon octicon-link"></span></a>Checking for undefined variables</h4>
+
+<p>The best part of all this is that you no longer need to worry about undefined variable values at all. For instance, if you have a value like this:</p>
 
 <pre><code>var foo={bar:undefined};
 
@@ -162,6 +178,9 @@
     console.log("no value") // this gets called no matter what the value of foo.bar is
   })
 </code></pre>
+
+<h4>
+<a name="complex-objects" class="anchor" href="#complex-objects"><span class="octicon octicon-link"></span></a>Complex objects</h4>
 
 <p>You can even work with complex objects and work with their properties. So for instance, maybe working with form values:</p>
 
