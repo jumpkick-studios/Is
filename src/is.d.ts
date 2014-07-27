@@ -10,6 +10,7 @@ declare module jumpkick {
         public and : Is;
         public isNot(): Is;
         public isA(): Is;
+        public or : Is;
         public matching(...args: any[]): any;
         private checkForLengthOrCompareNumber(test);
         public matchingAny(...args: any[]): any;

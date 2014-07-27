@@ -1,39 +1,39 @@
 describe("Is", function () {
     it("should correctly check that string is shorter than 4 characters", function () {
-        expect(Is("foo").shorterThan(4).value).not.toBeUndefined();
+        expect(Is("foo").shorterThan(4).value).not.toBeNull();
     });
     it("should correctly check that string is longer than 2 characters", function () {
-        expect(Is("foo").longerThan(2).value).not.toBeUndefined();
+        expect(Is("foo").longerThan(2).value).not.toBeNull();
     });
     it("should return nothing when longerThan is false", function () {
-        expect(Is("foo").longerThan(3).value).toBeUndefined();
+        expect(Is("foo").longerThan(3).value).toBeNull();
     });
     it("should return nothing when shorterThan is false", function () {
-        expect(Is("foo").shorterThan(3).value).toBeUndefined();
+        expect(Is("foo").shorterThan(3).value).toBeNull();
     });
     it("should return the value when equalTo is true", function () {
-        expect(Is("foo").equalTo("foo").value).not.toBeUndefined();
+        expect(Is("foo").equalTo("foo").value).not.toBeNull();
     });
     it("should return nothing when equalTo is false", function () {
-        expect(Is("foo").equalTo("").value).toBeUndefined();
+        expect(Is("foo").equalTo("").value).toBeNull();
     });
     it("should return the value when numeric is true", function () {
-        expect(Is(1).numeric().value).not.toBeUndefined();
+        expect(Is(1).numeric().value).not.toBeNull();
     });
     it("should return nothing when numeric is false", function () {
-        expect(Is("foo").numeric().value).toBeUndefined();
+        expect(Is("foo").numeric().value).toBeNull();
     });
     it("should return the value when lessThan is true", function () {
-        expect(Is(1).lessThan(2).value).not.toBeUndefined();
+        expect(Is(1).lessThan(2).value).not.toBeNull();
     });
     it("should return nothing when lessThan is false", function () {
-        expect(Is(1).lessThan(0).value).toBeUndefined();
+        expect(Is(1).lessThan(0).value).toBeNull();
     });
     it("should return the value when greaterThan is true", function () {
-        expect(Is(2).greaterThan(1).value).not.toBeUndefined();
+        expect(Is(2).greaterThan(1).value).not.toBeNull();
     });
     it("should return nothing when greaterThan is false", function () {
-        expect(Is(1).greaterThan(2).value).toBeUndefined();
+        expect(Is(1).greaterThan(2).value).toBeNull();
     });
     it("should trigger 'then' if the chain is valid", function () {
         var count = 0;
@@ -236,12 +236,54 @@ describe("Is", function () {
             num: 10,
             email: "joe.smith@fakeemail.com"
         };
-        Is(complexObject).prop("arr").not.emptyArray().and.prop("arr").contains(3).and.prop("str").longerThan(2).and.prop("str").shorterThan(4).and.prop("str").equalTo("foo").and.prop("num").numeric().and.prop("email").matching(validEmail).then(function () {
+        Is(complexObject).and.prop("arr").not.emptyArray().and.prop("arr").contains(3).not.prop("arr").contains(7).and.prop("str").longerThan(2).and.prop("str").shorterThan(4).and.prop("str").equalTo("foo").and.prop("num").numeric().and.prop("email").matching(validEmail).then(function () {
             count = 1;
         }).catch(function () {
             count = 0;
         });
         expect(count).toBe(1);
+    });
+    it("should return true if any of the or validations are true", function () {
+        var count = 0;
+        Is(1).greaterThan(4).or.lessThan(2).then(function () {
+            count = 1;
+        });
+        expect(count).toBe(1);
+    });
+    it("should return false if none of the or validations are true", function () {
+        var count = 0;
+        Is(5).greaterThan(14).or.lessThan(4).then(function () {
+            count = 1;
+        });
+        expect(count).toBe(0);
+    });
+    it("should return true if any of the or validations are true for objects", function () {
+        var count = 0;
+        Is({ foo: 3 }).prop("foo").greaterThan(15).or.prop("foo").lessThan(4).then(function () {
+            count = 1;
+        });
+        expect(count).toBe(1);
+    });
+    it("should return false if none of the or validations are true for objects", function () {
+        var count = 0;
+        Is({ foo: 3 }).prop("foo").greaterThan(15).or.prop("foo").lessThan(2).then(function () {
+            count = 1;
+        });
+        expect(count).toBe(0);
+    });
+    it("should return true if any of the or validations are true for objects", function () {
+        var count = 0;
+        Is({ foo: 3, bar: "baz" }).prop("foo").greaterThan(15).or.prop("foo").lessThan(2).or.prop("bar").shorterThan(4).then(function () {
+            count = 1;
+        });
+        expect(count).toBe(1);
+    });
+    it("should return false if none of the or validations are true for objects", function () {
+        var count = 0;
+        Is({ foo: 3, bar: "baz" }).prop("foo").greaterThan(15).or.prop("foo").lessThan(2).or.prop("bar").shorterThan(3).then(function () {
+            count = 1;
+        });
+        expect(count).toBe(0);
     });
 });
 //# sourceMappingURL=isSpec.js.map
