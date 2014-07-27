@@ -114,7 +114,19 @@ There are several methods available for checking the input value. If a validatio
     });
   
 ```
-The best part of all this is that you no longer need to worry about undefined variable values. For instance, if you have a value like this:
+####Dealing with `or` statements
+One of the matchers above is the `matchingAny` method. This checks to see if any of the strings, or shorthand matchers are true. But you can also use the `or` method.
+```
+    Is({foo:3,bar:"baz"})
+      .prop("foo").lessThan(2) // this is false, but with the _or_ method immedatiately following it...
+      .or.prop("bar").longerThan(1) //this is true, so the whole chain is valid 
+      .then(()=> {
+           //do something cool here
+      });
+```
+
+####Checking for undefined variables
+The best part of all this is that you no longer need to worry about undefined variable values at all. For instance, if you have a value like this:
 
 ```
 var foo={bar:undefined};
@@ -126,6 +138,7 @@ var foo={bar:undefined};
   })
 ```
 
+####Complex objects
 You can even work with complex objects and work with their properties. So for instance, maybe working with form values:
 ```
  var validEmail = function (val:string) {
