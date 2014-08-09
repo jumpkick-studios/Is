@@ -104,7 +104,8 @@ module jumpkick {
 
         private getReturnedInstance(valid:boolean):Is {
             if (!valid) {
-                this.value = null;
+                if (!this.testingAny)
+                    this.value = null;
             } else {
                 if (!this.value) {
                     this.value = this.originalValue;

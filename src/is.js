@@ -90,7 +90,8 @@ var jumpkick;
         };
         Is.prototype.getReturnedInstance = function (valid) {
             if (!valid) {
-                this.value = null;
+                if (!this.testingAny)
+                    this.value = null;
             }
             else {
                 if (!this.value) {

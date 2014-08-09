@@ -299,5 +299,19 @@ describe("Is", function () {
         });
         expect(count).toBe(0);
     });
+    it("should return true if any of the or validations are true for matchers and the second one is false", function () {
+        var count = 0;
+        Is(3).equalTo(3).or.equalTo(4).then(function () {
+            count = 1;
+        });
+        expect(count).toBe(1);
+    });
+    it("should return true if any of the or validations are true for matchers and the first one is false", function () {
+        var count = 0;
+        Is(3).equalTo(4).or.equalTo(3).then(function () {
+            count = 1;
+        });
+        expect(count).toBe(1);
+    });
 });
 //# sourceMappingURL=isSpec.js.map

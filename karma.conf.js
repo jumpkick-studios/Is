@@ -56,7 +56,12 @@ module.exports = function (config) {
         // - PhantomJS
         // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
         browsers      : ['PhantomJS'],
-
+        preprocessors: {
+            // source files, that you wanna generate coverage for
+            // do not include tests or libraries
+            // (these files will be instrumented by Istanbul)
+            'src/*.js': ['coverage']
+        },
 
         // If browser does not capture in given timeout [ms], kill it
         captureTimeout: 60000,
