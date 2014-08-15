@@ -44,7 +44,7 @@ A better way to handle this is to write the code in such a way that when any sin
 
   var foo="bar";
   Is(foo)
-    .longerThan(0).
+    .longerThan(0)
     .equalTo("bar")
     .not.equalTo("bar2")
     .then(()=>{
